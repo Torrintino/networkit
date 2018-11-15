@@ -38,10 +38,40 @@
 #include "../PartitionFragmentation.h"
 #include "../../generators/ClusteredRandomGraphGenerator.h"
 #include "../../generators/ErdosRenyiGenerator.h"
+#include "../TriangleCount.h"
+#include "../ComputeDistance.h"
 
 namespace NetworKit {
 
 class CommunityGTest: public testing::Test{};
+
+  TEST_F(CommunityGTest, testTriangleCount) {
+    Graph G(10);
+    INFO("INFO");
+    DEBUG("DEBUG");
+    WARN("WARN");
+    TriangleCount tg(G);
+    tg.run();
+  }
+  
+  /*
+  0 -> 1(1) -> 2(2) -> 4(3)
+    -> 3(1)
+
+  */
+  
+  TEST_F(CommunityGTest, testComputeDistance) {
+    //Graph g = ErdosRenyiGenerator(20, 0.2).generate();
+    Graph g(6);
+    g.addEdge(0,1);
+    g.addEdge(1,2);
+    g.addEdge(2,4);
+    g.addEdge(0,3);
+    g.addEdge(0,0);
+    
+    ComputeDistance cd(g, 0);
+    cd.run();
+  }
 
 TEST_F(CommunityGTest, testLabelPropagationOnUniformGraph) {
 	ErdosRenyiGenerator graphGen(100, 0.2);
