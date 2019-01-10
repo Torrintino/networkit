@@ -32,8 +32,6 @@ networkit_add_module(community
     SampledGraphStructuralRandMeasure.cpp
     SampledNodeStructuralRandMeasure.cpp
     StablePartitionNodes.cpp
-    TriangleCount.cpp
-    ComputeDistance.cpp
     )
 
 networkit_module_link_modules(community
