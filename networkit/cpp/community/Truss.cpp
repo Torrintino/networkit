@@ -6,27 +6,26 @@ namespace NetworKit {
     hasRun = false;
   }
 
+  /*** More notes and specifications can be found in the header ***/
   MaximumKTruss(Graph& g, int k) {
-    // This data structure is supposed to hold a sorted array of edges and their support
-    // I'll assume that edge_support.first() returns a Triple with attributes u, v, support,
-    // where u and v are the node id's of the edge
-    // Removing the first element must be done in O(1)
-    SupportQueue edge_support(g.size().second);
-    std::vector<std::Pair(node u, node v)> phi;
+    SupportQueue q(g.size().second);
     
     g.forEdges([&] (node u, node v) {
-	int support = compute_support(g, u, v);
-	edge_support.add(u, v, support);
+	// Use triangle counting algorithm, O(m¹.5)
+	int support = compute_support(g, u, v); 
+	q.add(u, v, support);
       });
-    edge_support.sort();
+    q.sort();
 
-    while(edge_support.front().support <= k - 2) {
-      std::triple e = edge_support.front();
+    while(q.front().support <= k - 2) {
+      std::triple e = q.front();
+      q.pop();
       forNeighborsOf(e.first, [&] (node w) {
-	  if(g.hasEdge(v, w)) {
-	    edge_support.reduce(u, w);
-	    edge_support.reduce(v, w);
-	    edge_support.reorder();
+	  if(q.lookUp(e.first, w) != -1) { 
+	    q.reduce(e.first, w);
+	    q.reduce(e.second, w);
+	    q.reorder(e.first, w);
+	    q.reorder(e.second, w);
 	  }
 	});
     }
