@@ -40,6 +40,8 @@ namespace NetworKit {
   SupportQueue::SupportQueue(int size) {
     q.reserve(size);
     index = 0;
+    h.reserve(size);
+    for(int i=0; i<size; i++) h[i] = -1;
     // How much space do we need for the hash table?
     // At least O(m), should be at max O(m * log m), O(m^2) would be the extreme
   }
@@ -47,21 +49,33 @@ namespace NetworKit {
   // Would it be smarter to use pointers for the hash table, instead of indeces?
   SupportQueue::add(double u, double v, int support) {
     q.push_back(std::Triple<double, double, int>(u, v, support));
-    // compute hash of (u,v)
-    h[hash] = q.size - 1;
+    store(u, v, q.size - 1);
   }
 
   int SupportQueue::lookUp(double u, double v) {
-    // What hash function do we use?
+    int pos = hash(u, v) % q.size;
+    while(q[pos].first != u && q[pos].second != v) pos++;
+    return pos;
   }
 
   void SupportQueue::sort() {
     sort(q.begin(), q.end(), compareSupport);
   }
+
+  void store(int u, int v, int value) {
+    int pos = hash(u, v) % q.size;
+    while(h[pos] != -1) pos++;
+    h[pos] = value;
+  }
+
   
   
 }
 
 bool compareSupport(std::Triple<double, double, int> u, std::Triple<double, double, int> u) {
   return (u.third < v.third);
+}
+
+int hash(int u, int v) {
+  return ((u + v) * (u + v + 1)/2) + v;
 }

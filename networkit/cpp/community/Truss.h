@@ -72,6 +72,9 @@ namespace NetworKit {
     // automatically places the edge in the right position in the queue
     void sort();
 
+
+    void store(int u, int v, int value);
+
     /* Returns the position of the edge from u to v in q from the hash table h
        Returns -1, if the edge doesn't exit */
     int lookUp(double u, double v);
