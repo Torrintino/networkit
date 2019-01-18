@@ -56,6 +56,10 @@ namespace NetworKit {
     // Decrease the support of (u,v) by one
     void reduce(double u, double v);
 
+    // Gives index into q, where a new element can be inserted with given support
+    // in a way that q remains sorted, when the new element is added
+    int search(int support);
+
     /* Assuming that u, v had the correct the position in the Queue before,
        after a reduce operation was performed on (u, v)
        reposition (u, v) to the potentially changed correct position */
