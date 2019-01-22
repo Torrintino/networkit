@@ -62,13 +62,31 @@ namespace NetworKit {
     sort(q.begin(), q.end(), compareSupport);
   }
 
+  void SupportQueue::reorder(double u, double v) {
+    int pos = lookUp(double u, double v);
+
+    while(pos > 0) {
+      if(q[pos].third < q[pos - 1]) {
+	// Exchange the element with its sucessor
+	std::triple<double, double, int> temp(q[pos]);
+	q[pos] = q[pos-1];
+	store(q[pos].first, q[pos].second, pos);
+	pos--;
+	q[pos] = temp;
+	store(q[pos].first, q[pos].second, pos);
+      } else {
+	break;
+      }
+    }
+  }
+
+  // I think the traversing here is really inefficient, in the worst case could be O(n)
+  // We should probably use more space for the hash table
   void store(int u, int v, int value) {
     int pos = hash(u, v) % q.size;
     while(h[pos] != -1) pos++;
     h[pos] = value;
   }
-
-  
   
 }
 
