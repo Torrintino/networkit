@@ -1,5 +1,10 @@
 #include "Truss.h"
 
+// For a pair of integers, compute a single integer that uniquely identifies that pair
+int unpair(int u, int v) {
+  return ((u + v) * (u + v + 1)/2) + v;
+}
+
 namespace NetworKit {
 
   MaximumKTruss::MaximumKTruss(Graph& g) : g(g, 0) {
@@ -8,24 +13,24 @@ namespace NetworKit {
 
   /*** More notes and specifications can be found in the header ***/
   MaximumKTruss(Graph& g, int k) {
-    SupportQueue q(g.size().second);
-    
+    SupportQueue sq.size().second;
+    std::unordered_map<int, int> h;
+        
     g.forEdges([&] (node u, node v) {
 	// Use triangle counting algorithm, O(m¹.5)
 	int support = compute_support(g, u, v); 
-	q.add(u, v, support);
+	sq.push(SupportEdge(u, v, support));
       });
-    q.sort();
+    sq.sort();
+    
 
-    while(q.front().support <= k - 2) {
-      std::triple e = q.front();
-      q.pop();
+    while(SupportEdge e = sq.top().support <= k - 2) {
+      sq.pop();
       forNeighborsOf(e.u, [&] (node w) {
-	  if(q.lookUp(e.u, w) != -1) { 
-	    q.reduce(e.u, w);
-	    q.reduce(e.v, w);
-	    q.reorder(e.u, w);
-	    q.reorder(e.v, w);
+	  if(int pos_u = h.find(unpair(e.v, w)) != h.end()) {
+	    int pos_v = h.find(unpair(e.u, w);
+	    sq.reduce(pos_u);
+	    sq.reduce(pos_v);
 	  }
 	});
     }
@@ -43,54 +48,30 @@ namespace NetworKit {
   }
 
   // Would it be smarter to use pointers for the hash table, instead of indeces?
-  SupportQueue::add(double u, double v, int support) {
+  void SupportQueue::push(SupportEdge e) {
     q.push_back(SupportEdge(u, v, support));
-    store(u, v, q.size - 1);
+    h[unpair(u, v)] = q.size - 1;
   }
 
-  void SupportQueue::sort() {
-    sort(q.begin(), q.end(), compareSupport);
-  }
-
-  void reduce(double u, double v) {
+  void SupportQueue::reduce(double u, double v) {
     int pos = h[unpair(double u, double v)];
-    q[pos]--;
-  }
+    q[pos].support--;
 
-  void SupportQueue::reorder(double u, double v) {
-    int pos = h[unpair(double u, double v)];
-
+    // Reorder
     while(pos > index) {
-      if(q[pos].third < q[pos - 1]) {
+      if(q[pos].support < q[pos - 1].support) {
+	
 	// Exchange the element with its sucessor
 	SupportEdge temp(q[pos]);
 	q[pos] = q[pos-1];
-	store(q[pos].u, q[pos].v, pos);
+	h[unpair(q[pos].u, q[pos].v)] = pos;
 	pos--;
 	q[pos] = temp;
-	store(q[pos].u, q[pos].v, pos);
+	h[unpair(q[pos].u, q[pos].v)] = pos;
       } else {
 	break;
       }
     }
   }
 
-  // I think the traversing here is really inefficient, in the worst case could be O(n)
-  // We should probably use more space for the hash table
-  void store(int u, int v, int pos) {
-    int key = unpair(u, v);
-    if(h.find(key) != h.end())
-      h.remove(key);
-    h[key] = pos;
-  }
-  
-}
-
-bool compareSupport(SupportEdge e, SupportEdge f) {
-  return (e.support < f.support);
-}
-
-// For a pair of integers, compute a single integer that uniquely identifies that pair
-int unpair(int u, int v) {
-  return ((u + v) * (u + v + 1)/2) + v;
 }

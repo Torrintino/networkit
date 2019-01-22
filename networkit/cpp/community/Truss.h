@@ -42,42 +42,25 @@ namespace NetworKit {
      where all elements get added and then the elements will only be reordered.
      A special index is used, that marks the front element. So elements actually
      wont be removed from the queue, instead the index will be increased.
-
-     Associated with the Queue is the hash table h. Whenever the position of an
-     element in q is changed, the entry in h must be updated accordingly.
-     The hash table enables access to all Queue elements in constant time.
   */
   class SupportQueue {
 
   public:
     EdgeSupport(int size); // Initialize index to 0
-    void add(double u, double v, int support);
-    SupportEdge front() { return q[index]; }
+    void push(double u, double v, int support);
+    SupportEdge top() { return q[index]; }
 
-    // Decrease the support of (u,v) by one
-    void reduce(double u, double v);
+    // Decrease support of edge at given position and then reorder
+    void reduce(int pos);
 
-    /* Assuming that u, v had the correct the position in the Queue before,
-       after a reduce operation was performed on (u, v)
-       reposition (u, v) to the potentially changed correct position */
-    void reorder(double u, double v);
+    void sort() { sort(sq.begin(), sq.end(), compareSupport)};
 
     // Remove the front element from the Queue
     void pop() { index++; }
 
-    // Sort the Queue
-    void sort();
-
-    // Store positition of edge (u,v) in hash table
-    void store(int u, int v, int value);
-
   private:
-    int index;
-    // Contains all edges, sorted by their support (asc)
     std::vector<SupportEdge> q;
-
-    // Hash table, used to immediately compute the position of an element in the queue
-    std::unordered_map<int, int> h;
+    int index;
   };
 
   // This is just a convenience class, working with triples is pretty ugly oftentimes
@@ -90,7 +73,8 @@ namespace NetworKit {
     SupportEdge(double u, double u, int support) : u(u), v(v), support(support) {};
     SupportEdge(SupportEdge copy) : u(copy.u), v(copy.v), support(copy.support) {};
   }
-  
+
+  bool compareSupport(SupportEdge e, SupportEdge f) { return (e.support < f.support); }
 }
 
 #endif
