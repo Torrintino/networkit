@@ -39,8 +39,9 @@ namespace NetworKit {
      support.
 
      This data structure assumes, that there is one initialization phase,
-     where all elements get added and then the elements will only be reordered,
-     or removed.
+     where all elements get added and then the elements will only be reordered.
+     A special index is used, that marks the front element. So elements actually
+     wont be removed from the queue, instead the index will be increased.
 
      Associated with the Queue is the hash table h. Whenever the position of an
      element in q is changed, the entry in h must be updated accordingly.
@@ -51,7 +52,7 @@ namespace NetworKit {
   public:
     EdgeSupport(int size); // Initialize index to 0
     void add(double u, double v, int support);
-    std::triple<double, double, int> front() { return q[index]; }
+    SupportEdge front() { return q[index]; }
 
     // Decrease the support of (u,v) by one
     void reduce(double u, double v);
@@ -61,30 +62,34 @@ namespace NetworKit {
        reposition (u, v) to the potentially changed correct position */
     void reorder(double u, double v);
 
-    // Remove the front element from the Queue, must be implemented in O(1)
+    // Remove the front element from the Queue
     void pop() { index++; }
 
-    // Alternatively one could implement add in a way that
-    // automatically places the edge in the right position in the queue
+    // Sort the Queue
     void sort();
 
-
+    // Store positition of edge (u,v) in hash table
     void store(int u, int v, int value);
-
-    /* Returns the position of the edge from u to v in q from the hash table h
-       Returns -1, if the edge doesn't exit */
-    int lookUp(double u, double v);
 
   private:
     int index;
     // Contains all edges, sorted by their support (asc)
-    std::vector<std::triple<double, double, int>> q;
+    std::vector<SupportEdge> q;
 
     // Hash table, used to immediately compute the position of an element in the queue
-    std::vector<int> h;
+    std::unordered_map<int, int> h;
   };
 
-  
+  // This is just a convenience class, working with triples is pretty ugly oftentimes
+  class SupportEdge {
+
+  public:
+    double u, v;
+    int support;
+
+    SupportEdge(double u, double u, int support) : u(u), v(v), support(support) {};
+    SupportEdge(SupportEdge copy) : u(copy.u), v(copy.v), support(copy.support) {};
+  }
   
 }
 
