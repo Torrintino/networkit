@@ -1,43 +1,44 @@
 #include "Truss.h"
-
-// For a pair of integers, compute a single integer that uniquely identifies that pair
-int unpair(int u, int v) {
-  return ((u + v) * (u + v + 1)/2) + v;
-}
+#include <unordered_map>
 
 namespace NetworKit {
+  
+  int compute_support(Graph& g, double u, double v) {
+    return 0;
+  }
 
-  MaximumKTruss::MaximumKTruss(Graph& g) : g(g, 0) {
+  MaximumKTruss::MaximumKTruss(Graph& g) {
     hasRun = false;
+    this->g.push_back(g);
   }
 
   /*** More notes and specifications can be found in the header ***/
-  MaximumKTruss(Graph& g, int k) {
-    SupportQueue sq.size().second;
-    std::unordered_map<int, int> h;
+  Graph& ReduceToKTruss(Graph& g, int k) {
+    SupportQueue sq(g.size().second);
         
     g.forEdges([&] (node u, node v) {
 	// Use triangle counting algorithm, O(m¹.5)
 	int support = compute_support(g, u, v); 
-	sq.push(SupportEdge(u, v, support));
+	sq.push(u, v, support);
       });
     sq.sort();
     
 
-    while(SupportEdge e = sq.top().support <= k - 2) {
+    while(sq.top().support <= k - 2) {
+      SupportEdge e = sq.top();
       sq.pop();
-      forNeighborsOf(e.u, [&] (node w) {
-	  if(int pos_u = h.find(unpair(e.v, w)) != h.end()) {
-	    int pos_v = h.find(unpair(e.u, w);
-	    sq.reduce(pos_u);
-	    sq.reduce(pos_v);
+      g.forNeighborsOf(e.u, [&] (node w) {
+	  if(isEdge(e.v, w)) {
+	    sq.reduce(e.v, w);
+	    sq.reduce(e.u, w);
 	  }
 	});
     }
-    
+
+    return g;
   }
 
-  MaximumKTruss::run() {
+  void MaximumKTruss::run() {
     MaximumKTruss(g[0]);
     // print g
   }
@@ -48,7 +49,7 @@ namespace NetworKit {
   }
 
   // Would it be smarter to use pointers for the hash table, instead of indeces?
-  void SupportQueue::push(SupportEdge e) {
+  void SupportQueue::push(double u, double v, int support) {
     q.push_back(SupportEdge(u, v, support));
     h[unpair(u, v)] = q.size - 1;
   }

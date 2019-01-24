@@ -4,7 +4,25 @@
 #include "../base/Algorithm.h"
 #include "../graph/Graph.h"
 
+// For a pair of integers, compute a single integer that uniquely identifies that pair
+int unpair(int u, int v) {
+  return ((u + v) * (u + v + 1)/2) + v;
+}
+
 namespace NetworKit {
+
+  // This is just a convenience class, working with triples is pretty ugly oftentimes
+  class SupportEdge {
+
+  public:
+    double u, v;
+    int support;
+
+    SupportEdge(double u, double v, int support) : u(u), v(v), support(support) {};
+    SupportEdge(SupportEdge& copy) : u(copy.u), v(copy.v), support(copy.support) {};
+  };
+
+  bool compareSupport(SupportEdge e, SupportEdge f) { return (e.support < f.support); }
 
   /* The implementation is according to "Truss Decomposition in Massive Networks" */
   class MaximumKTruss : public Algorithm {
@@ -25,7 +43,7 @@ namespace NetworKit {
 
     // In the simple variant, this will be of size 1 and hold the input graph
     // Later it will hold disjunct components of the graph
-    std::vector<Graph> g(1);
+    std::vector<Graph> g;
   };
 
   // This will be used for testing
@@ -46,35 +64,26 @@ namespace NetworKit {
   class SupportQueue {
 
   public:
-    EdgeSupport(int size); // Initialize index to 0
+    SupportQueue(int size); // Initialize index to 0
     void push(double u, double v, int support);
-    SupportEdge top() { return q[index]; }
+    SupportEdge& top() { return q[index]; }
 
     // Decrease support of edge at given position and then reorder
     void reduce(int pos);
 
-    void sort() { sort(sq.begin(), sq.end(), compareSupport)};
+    void sort() { std::sort(q.begin(), q.end(), compareSupport);}
 
     // Remove the front element from the Queue
     void pop() { index++; }
 
+    bool isEdge(double u, double v) {return h.find(unpair(u, v)) == h.end(); }
+
   private:
     std::vector<SupportEdge> q;
+    std::unordered_map<int, int> h;
     int index;
   };
 
-  // This is just a convenience class, working with triples is pretty ugly oftentimes
-  class SupportEdge {
-
-  public:
-    double u, v;
-    int support;
-
-    SupportEdge(double u, double u, int support) : u(u), v(v), support(support) {};
-    SupportEdge(SupportEdge copy) : u(copy.u), v(copy.v), support(copy.support) {};
-  }
-
-  bool compareSupport(SupportEdge e, SupportEdge f) { return (e.support < f.support); }
 }
 
 #endif
