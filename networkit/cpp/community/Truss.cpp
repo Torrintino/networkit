@@ -1,5 +1,4 @@
 #include "Truss.h"
-#include <unordered_map>
 
 namespace NetworKit {
   
@@ -28,7 +27,7 @@ namespace NetworKit {
       SupportEdge e = sq.top();
       sq.pop();
       g.forNeighborsOf(e.u, [&] (node w) {
-	  if(isEdge(e.v, w)) {
+	  if(sq.isEdge(e.v, w)) {
 	    sq.reduce(e.v, w);
 	    sq.reduce(e.u, w);
 	  }
@@ -51,11 +50,11 @@ namespace NetworKit {
   // Would it be smarter to use pointers for the hash table, instead of indeces?
   void SupportQueue::push(double u, double v, int support) {
     q.push_back(SupportEdge(u, v, support));
-    h[unpair(u, v)] = q.size - 1;
+    h[unpair(u, v)] = q.size() - 1;
   }
 
   void SupportQueue::reduce(double u, double v) {
-    int pos = h[unpair(double u, double v)];
+    int pos = h[unpair(u, v)];
     q[pos].support--;
 
     // Reorder

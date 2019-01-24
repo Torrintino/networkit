@@ -4,6 +4,8 @@
 #include "../base/Algorithm.h"
 #include "../graph/Graph.h"
 
+#include <unordered_map>
+
 // For a pair of integers, compute a single integer that uniquely identifies that pair
 int unpair(int u, int v) {
   return ((u + v) * (u + v + 1)/2) + v;
@@ -18,8 +20,8 @@ namespace NetworKit {
     double u, v;
     int support;
 
-    SupportEdge(double u, double v, int support) : u(u), v(v), support(support) {};
-    SupportEdge(SupportEdge& copy) : u(copy.u), v(copy.v), support(copy.support) {};
+  SupportEdge(double u, double v, int support) : u(u), v(v), support(support) {};
+  //SupportEdge(SupportEdge& copy) : u(copy.u), v(copy.v), support(copy.support) {};
   };
 
   bool compareSupport(SupportEdge e, SupportEdge f) { return (e.support < f.support); }
@@ -69,7 +71,7 @@ namespace NetworKit {
     SupportEdge& top() { return q[index]; }
 
     // Decrease support of edge at given position and then reorder
-    void reduce(int pos);
+    void reduce(double u, double v);
 
     void sort() { std::sort(q.begin(), q.end(), compareSupport);}
 
