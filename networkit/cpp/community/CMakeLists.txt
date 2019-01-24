@@ -32,6 +32,7 @@ networkit_add_module(community
     SampledGraphStructuralRandMeasure.cpp
     SampledNodeStructuralRandMeasure.cpp
     StablePartitionNodes.cpp
+    Truss.cpp
     )
 
 networkit_module_link_modules(community
