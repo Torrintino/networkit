@@ -3,10 +3,31 @@
 namespace NetworKit {
   
   int compute_support(Graph& g, double u, double v) {
-    return 0;
+	int c=0;
+    auto neighbors_u=g.neighbors(u);
+    auto neighbors_v=g.neighbors(v);
+	int i=0;
+	int j=0;
+	while(i<neighbors_u.size() && j<neighbors_v.size()){
+		auto a=neighbors_u.at(i);
+		auto b=neighbors_v.at(j);
+		if(a<b){
+			i++;
+		} else if(a>b){
+			j++;
+		} else {
+			i++;
+			j++;
+		}
+		c++;
+	}
+	c+=neighbors_u.size()-i;
+	c+=neighbors_v.size()-j;
+    return c;
   }
 
   MaximumKTruss::MaximumKTruss(Graph& g) {
+    g.sortEdges();
     hasRun = false;
     this->g.push_back(g);
   }
