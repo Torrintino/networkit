@@ -66,24 +66,25 @@ namespace NetworKit {
   class SupportQueue {
 
   public:
-    SupportQueue(int size); // Initialize index to 0
-    void push(double u, double v, int support);
-    SupportEdge& top() { return q[index]; }
+    SupportQueue(count size); // Initialize index to 0
+    void push(node u, node v, count support);
+    SupportEdge& top() { return q[head]; }
 
     // Decrease support of edge at given position and then reorder
-    void reduce(double u, double v);
+    void reduce(node u, node v);
 
     void sort() { std::sort(q.begin(), q.end(), compareSupport);}
 
     // Remove the front element from the Queue
-    void pop() { index++; }
+    void pop() { head++; }
 
-    bool isEdge(double u, double v) {return h.find(unpair(u, v)) == h.end(); }
+    bool isEdge(node u, node v) {return h.find(unpair(u, v)) == h.end(); }
 
   private:
     std::vector<SupportEdge> q;
-    std::unordered_map<int, int> h;
-    int index;
+    std::vector<count> support_index;
+    std::unordered_map<count, count> h;
+    count head;
   };
 
 }

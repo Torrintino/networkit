@@ -2,12 +2,12 @@
 
 namespace NetworKit {
   
-  int compute_support(Graph& g, double u, double v) {
-	int c=0;
+  count compute_support(Graph& g, node u, node v) {
+	count c=0;
     auto neighbors_u=g.neighbors(u);
     auto neighbors_v=g.neighbors(v);
-	int i=0;
-	int j=0;
+	count i=0;
+	count j=0;
 	while(i<neighbors_u.size() && j<neighbors_v.size()){
 		auto a=neighbors_u.at(i);
 		auto b=neighbors_v.at(j);
@@ -33,12 +33,12 @@ namespace NetworKit {
   }
 
   /*** More notes and specifications can be found in the header ***/
-  Graph& ReduceToKTruss(Graph& g, int k) {
+  Graph& ReduceToKTruss(Graph& g, count k) {
     SupportQueue sq(g.size().second);
         
     g.forEdges([&] (node u, node v) {
 	// Use triangle counting algorithm, O(m¹.5)
-	int support = compute_support(g, u, v); 
+	count support = compute_support(g, u, v); 
 	sq.push(u, v, support);
       });
     sq.sort();
@@ -63,23 +63,23 @@ namespace NetworKit {
     // print g
   }
 
-  SupportQueue::SupportQueue(int size) {
+  SupportQueue::SupportQueue(count size) {
     q.reserve(size);
-    index = 0;
+    head = 0;
   }
 
   // Would it be smarter to use pointers for the hash table, instead of indeces?
-  void SupportQueue::push(double u, double v, int support) {
+  void SupportQueue::push(node u, node v, count support) {
     q.push_back(SupportEdge(u, v, support));
     h[unpair(u, v)] = q.size() - 1;
   }
 
-  void SupportQueue::reduce(double u, double v) {
-    int pos = h[unpair(u, v)];
+  void SupportQueue::reduce(node u, node v) {
+    count pos = h[unpair(u, v)];
     q[pos].support--;
 
     // Reorder
-    while(pos > index) {
+    while(pos > head) {
       if(q[pos].support < q[pos - 1].support) {
 	
 	// Exchange the element with its sucessor
