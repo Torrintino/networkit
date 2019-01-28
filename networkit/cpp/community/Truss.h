@@ -6,6 +6,13 @@
 
 #include <unordered_map>
 
+/* Authors: Niklas Deckers, Lennart Weiß
+ *
+ * One note about the types: "node" is used for node ID's
+ *                           "count" is associated with edges
+ * When there are n nodes and m edges, "node" is used for holding n items and count for m items
+ */
+
 // For a pair of integers, compute a single integer that uniquely identifies that pair
 int unpair(int u, int v) {
   return ((u + v) * (u + v + 1)/2) + v;

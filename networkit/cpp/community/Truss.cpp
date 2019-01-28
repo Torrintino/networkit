@@ -37,7 +37,7 @@ namespace NetworKit {
     SupportQueue sq(g.size().second);
         
     g.forEdges([&] (node u, node v) {
-	// Use triangle counting algorithm, O(m¹.5)
+	// Use triangle counting algorithm, O(m log(m))
 	count support = compute_support(g, u, v); 
 	sq.push(u, v, support);
       });
@@ -65,6 +65,7 @@ namespace NetworKit {
 
   SupportQueue::SupportQueue(count size) {
     q.reserve(size);
+    support_index.support(count);
     head = 0;
   }
 
