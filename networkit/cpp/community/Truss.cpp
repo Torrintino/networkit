@@ -55,6 +55,9 @@ namespace NetworKit {
 	});
     }
 
+    for(int i=0; i<sq.head; i++)
+      g.removeEdge(sq.q[i].u, sq.q[i].v);
+
     return g;
   }
 

@@ -91,11 +91,12 @@ namespace NetworKit {
 
     bool isEdge(node u, node v) {return h.find(unpair(u, v)) == h.end(); }
 
-  private:
     std::vector<SupportEdge> q;
+    count head;
+
+  private:
     std::vector<count> support_index;
     std::unordered_map<count, count> h;
-    count head;
   };
 
 }
