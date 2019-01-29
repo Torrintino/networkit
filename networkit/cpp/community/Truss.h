@@ -77,6 +77,10 @@ namespace NetworKit {
     void push(node u, node v, count support);
     SupportEdge& top() { return q[head]; }
 
+    // Assuming all edges were added and sorted, create references to all positions in the
+    //  queue, where a certain support is starting
+    void init_support_index();
+
     // Decrease support of edge at given position and then reorder
     void reduce(node u, node v);
 
