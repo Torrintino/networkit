@@ -68,6 +68,55 @@ class CommunityGTest: public testing::Test{};
     EXPECT_EQ(compute_support(g1, 1, 3), 3);
     
   }
+
+  TEST_F(CommunityGTest, testTrussCompareSupport) {
+    SupportEdge e1(0, 1, 2);
+    SupportEdge e2(1, 2, 3);
+    SupportEdge e3(0, 2, 4);
+    EXPECT_TRUE(compareSupport(e1, e2));
+    EXPECT_FALSE(compareSupport(e3, e2));
+    EXPECT_FALSE(compareSupport(e3, e1));
+  }
+
+  TEST_F(CommunityGTest, testTrussSupportQueue) {
+    SupportQueue sq(9);
+    sq.push(0, 1, 0);
+    sq.push(1, 2, 2);
+    sq.push(1, 3, 3);
+    sq.push(1, 4, 2);
+    sq.push(2, 3, 2);
+    sq.push(2, 4, 2);
+    sq.push(3, 4, 2);
+    sq.push(1, 5, 1);
+    sq.push(3, 5, 1);
+
+    sq.sort();
+    for(int i=0; i<8; i++)
+      EXPECT_TRUE(sq.q[i].support <= sq.q[i+1].support);
+
+    sq.init_support_index();
+    sq.init_hash_table();
+    for(int i=0; i<9; i++) {
+      EXPECT_EQ(sq.h[unpair(sq.q[i].u, sq.q[i].v)], i);
+    }
+    
+    //for(int i=0; i<9; i++)
+    //std::cout << sq.support_index[i] << std::endl;
+    /*    
+    sq.pop();
+    EXPECT_TRUE(sq.head == 1);
+    EXPECT_TRUE(sq.top().support == 1);
+
+    for(int i=0; i<9; i++)
+     std::cout << sq.q[i].support << std::endl;*/
+
+    sq.reduce(1, 5);
+
+    //    for(int i=0; i<9; i++)
+    // std::cout << sq.q[i].support << std::endl;
+    
+    EXPECT_EQ(sq.q[1].support, 0);
+  }
   
 TEST_F(CommunityGTest, testLabelPropagationOnUniformGraph) {
 	ErdosRenyiGenerator graphGen(100, 0.2);

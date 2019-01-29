@@ -81,7 +81,12 @@ namespace NetworKit {
 
     // Assuming all edges were added and sorted, create references to all positions in the
     //  queue, where a certain support is starting
+    // WARNING: if there is no element with support s in q,
+    //  then the value of support_index[s] is undefined and shall never be used!
     void init_support_index();
+
+    // This has to be called after sorting, or the positions will be incorrect
+    void init_hash_table();
 
     // Decrease support of edge at given position and then reorder
     void reduce(node u, node v);
@@ -95,8 +100,6 @@ namespace NetworKit {
 
     std::vector<SupportEdge> q;
     count head;
-
-  private:
     std::vector<count> support_index;
     std::unordered_map<count, count> h;
   };

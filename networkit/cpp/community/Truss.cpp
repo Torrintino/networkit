@@ -42,6 +42,7 @@ namespace NetworKit {
 	sq.push(u, v, support);
       });
     sq.sort();
+    sq.init_hash_table();
     sq.init_support_index();
 
     while(sq.top().support <= k - 2) {
@@ -74,26 +75,28 @@ namespace NetworKit {
   }
 
   void SupportQueue::init_support_index() {
-    count current_support = 1;
+    count current_support = 0;
     for(count i=0; i<q.size(); i++) {
       if(current_support < q[i].support)
-	support_index[current_support++] = i;
+	support_index[++current_support] = i;
     }
+  }
+
+  void SupportQueue::init_hash_table() {
+    for(int i=0; i<q.size(); i++)
+      h[unpair(q[i].u, q[i].v)] = i;
   }
 
   // Would it be smarter to use pointers for the hash table, instead of indeces?
   void SupportQueue::push(node u, node v, count support) {
     q.push_back(SupportEdge(u, v, support));
-    h[unpair(u, v)] = q.size() - 1;
   }
 
   void SupportQueue::reduce(node u, node v) {
     count pos = h[unpair(u, v)];
 
     // The index to the elements with the old support moves one position to the right
-    support_index[q[pos].support]++;
-    
-    count i = support_index[q[pos].support];
+    count i = support_index[q[pos].support]++;
     if(pos != i) {
       // There is another element with the same support
       // As we reduce the support only by one, the new correct position for q[pos]
@@ -102,6 +105,8 @@ namespace NetworKit {
       SupportEdge temp(q[pos]);
       q[pos] = q[i];
       q[i] = temp;
+      h[unpair(u, v)] = i;
+      h[unpair(q[i].u, q[i].v)] = pos;
 
       pos = i;
     }
