@@ -38,15 +38,41 @@
 #include "../PartitionFragmentation.h"
 #include "../../generators/ClusteredRandomGraphGenerator.h"
 #include "../../generators/ErdosRenyiGenerator.h"
+#include "../Truss.h"
 
 namespace NetworKit {
 
 class CommunityGTest: public testing::Test{};
 
+  TEST_F(CommunityGTest, testTrussUnpair) {
+    EXPECT_TRUE(unpair(2, 3) == unpair(3, 2));
+    EXPECT_TRUE(unpair(3, 4) != unpair(2, 5));
+    EXPECT_TRUE(unpair(1, 4) != unpair(2, 3));
+  }
+
+  TEST_F(CommunityGTest, testTrussComputeSupport) {
+
+    Graph g1(6);
+    g1.addEdge(1,2);
+    g1.addEdge(1,3);
+    g1.addEdge(2,3);
+    g1.addEdge(1,4);
+    g1.addEdge(3,4);
+    g1.addEdge(0,1);
+    g1.addEdge(2,4);
+    g1.addEdge(1,5);
+    g1.addEdge(3,5);
+    g1.sortEdges();
+    EXPECT_EQ(compute_support(g1, 0, 1), 0);
+    EXPECT_EQ(compute_support(g1, 1, 2), 2);
+    EXPECT_EQ(compute_support(g1, 1, 3), 3);
+    
+  }
+  
 TEST_F(CommunityGTest, testLabelPropagationOnUniformGraph) {
 	ErdosRenyiGenerator graphGen(100, 0.2);
 	Graph G = graphGen.generate();
-
+	
 	PLP lp(G);
 	lp.run();
 	Partition zeta = lp.getPartition();

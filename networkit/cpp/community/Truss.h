@@ -13,12 +13,14 @@
  * When there are n nodes and m edges, "node" is used for holding n items and count for m items
  */
 
-// For a pair of integers, compute a single integer that uniquely identifies that pair
-int unpair(int u, int v) {
-  return ((u + v) * (u + v + 1)/2) + v;
-}
-
 namespace NetworKit {
+
+  count compute_support(Graph& g, node u, node v);
+
+  // For a pair of integers, compute a single integer that uniquely identifies that pair
+  int unpair(int u, int v) {
+    return ((u + v) * (u + v + 1)/2) + v;
+  }
 
   // This is just a convenience class, working with triples is pretty ugly oftentimes
   class SupportEdge {
