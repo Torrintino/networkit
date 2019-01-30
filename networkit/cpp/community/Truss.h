@@ -19,7 +19,11 @@ namespace NetworKit {
 
   // For a pair of integers, compute a single integer that uniquely identifies that pair
   int unpair(int u, int v) {
-    return ((u + v) * (u + v + 1)/2) + v;
+    if(u >= v) {
+      return ((u + v) * (u + v + 1)/2) + v;
+    } else {
+      return ((u + v) * (u + v + 1)/2) + u;
+    }
   }
 
   // This is just a convenience class, working with triples is pretty ugly oftentimes
