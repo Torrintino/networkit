@@ -191,6 +191,29 @@ class CommunityGTest: public testing::Test{};
     g4.sortEdges();
     EXPECT_FALSE(isKTruss(g4, 4));
   }
+
+  TEST_F(CommunityGTest, testReduceToTruss) {
+    Graph g1(7); // Clique with 3 unnecessary nodes
+    g1.addEdge(0, 1);
+    g1.addEdge(0, 2);
+    g1.addEdge(0, 3);
+    g1.addEdge(1, 2);
+    g1.addEdge(1, 3);
+    g1.addEdge(2, 3);
+
+    // These should be deleted
+    g1.addEdge(0, 4);
+    g1.addEdge(0, 5);
+    g1.addEdge(0, 6);
+    g1.addEdge(4, 6);
+    g1.addEdge(2, 5);
+    g1.addEdge(3, 4);
+
+    MaximumKTruss kt(g1);
+    kt.run();
+    EXPECT_TRUE(isKTruss(kt.g[0], 4));
+    EXPECT_FALSE(isKTruss(kt.g[0], 5));
+  }
   
 TEST_F(CommunityGTest, testLabelPropagationOnUniformGraph) {
 	ErdosRenyiGenerator graphGen(100, 0.2);
