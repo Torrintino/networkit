@@ -9,7 +9,7 @@
 /* Authors: Niklas Deckers, Lennart Weiß
  *
  * One note about the types: "node" is used for node ID's
- *                           "count" is associated with edges
+ *                           "count" is used for enumerating edges
  * When there are n nodes and m edges, "node" is used for holding n items and count for m items
  */
 
@@ -100,7 +100,7 @@ namespace NetworKit {
     // Remove the front element from the Queue
     void pop() { head++; }
 
-    bool isEdge(node u, node v) {return h.find(unpair(u, v)) == h.end(); }
+    bool isEdge(node u, node v);
 
     std::vector<SupportEdge> q;
     count head;

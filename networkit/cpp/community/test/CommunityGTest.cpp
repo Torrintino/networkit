@@ -100,22 +100,30 @@ class CommunityGTest: public testing::Test{};
       EXPECT_EQ(sq.h[unpair(sq.q[i].u, sq.q[i].v)], i);
     }
     
-    //for(int i=0; i<9; i++)
-    //std::cout << sq.support_index[i] << std::endl;
-    /*    
     sq.pop();
     EXPECT_TRUE(sq.head == 1);
     EXPECT_TRUE(sq.top().support == 1);
 
-    for(int i=0; i<9; i++)
-     std::cout << sq.q[i].support << std::endl;*/
-
     sq.reduce(1, 5);
+    EXPECT_EQ(sq.top().support, 0);
 
-    //    for(int i=0; i<9; i++)
-    // std::cout << sq.q[i].support << std::endl;
+    EXPECT_TRUE(sq.isEdge(1,5));
+    EXPECT_FALSE(sq.isEdge(0,1));
+    EXPECT_TRUE(sq.isEdge(1,3));
+
+    sq.reduce(3, 4);
+    auto pos = sq.h[unpair(3, 4)];
+    EXPECT_EQ(sq.q[pos].support, 1);
+    EXPECT_TRUE(sq.q[pos-1].support <= 1 && sq.q[pos+1].support >= 1);
     
-    EXPECT_EQ(sq.q[1].support, 0);
+    sq.reduce(1, 3);
+    pos = sq.h[unpair(1, 3)];
+    EXPECT_EQ(sq.q[pos].support, 2);
+    EXPECT_TRUE(sq.q[pos-1].support <= 2 && sq.q[pos+1].support >= 2);
+
+    for(int i=0; i<9; i++) {
+      EXPECT_EQ(sq.h[unpair(sq.q[i].u, sq.q[i].v)], i);
+    }
   }
   
 TEST_F(CommunityGTest, testLabelPropagationOnUniformGraph) {

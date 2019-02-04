@@ -106,7 +106,7 @@ namespace NetworKit {
       q[pos] = q[i];
       q[i] = temp;
       h[unpair(u, v)] = i;
-      h[unpair(q[i].u, q[i].v)] = pos;
+      h[unpair(q[pos].u, q[pos].v)] = pos;
 
       pos = i;
     }
@@ -116,6 +116,11 @@ namespace NetworKit {
       if(q[pos - 1].support != q[pos].support)
 	support_index[q[pos].support] = i;
     }
+  }
+
+  bool SupportQueue::isEdge(node u, node v) {
+    auto pos = h.find(unpair(u, v));
+    return pos != h.end() && (*pos).second >= head;
   }
 
 }
