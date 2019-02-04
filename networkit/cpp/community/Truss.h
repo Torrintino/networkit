@@ -15,7 +15,7 @@
 
 namespace NetworKit {
 
-  count compute_support(Graph& g, node u, node v);
+  count compute_support(const Graph& g, node u, node v);
 
   // For a pair of integers, compute a single integer that uniquely identifies that pair
   int unpair(int u, int v) {

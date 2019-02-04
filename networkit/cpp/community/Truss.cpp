@@ -2,7 +2,7 @@
 
 namespace NetworKit {
   
-  count compute_support(Graph& g, node u, node v) {
+  count compute_support(const Graph& g, node u, node v) {
 	count c=0;
     auto neighbors_u=g.neighbors(u);
     auto neighbors_v=g.neighbors(v);
@@ -121,6 +121,14 @@ namespace NetworKit {
   bool SupportQueue::isEdge(node u, node v) {
     auto pos = h.find(unpair(u, v));
     return pos != h.end() && (*pos).second >= head;
+  }
+
+  bool isKTruss(const Graph& g, int k) {
+    g.forEdges([&] (node u, node v) {
+	if(compute_support(g, u, v) < k)
+	  return false;
+      });
+    return true;
   }
 
 }

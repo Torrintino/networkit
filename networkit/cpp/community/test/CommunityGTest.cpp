@@ -125,6 +125,72 @@ class CommunityGTest: public testing::Test{};
       EXPECT_EQ(sq.h[unpair(sq.q[i].u, sq.q[i].v)], i);
     }
   }
+
+  TEST_F(CommunityGTest, testIsTruss) {
+    Graph g1(4); // Clique
+    g1.addEdge(0, 1);
+    g1.addEdge(0, 2);
+    g1.addEdge(0, 3);
+    g1.addEdge(1, 2);
+    g1.addEdge(1, 3);
+    g1.addEdge(2, 3);
+    g1.sortEdges();
+    EXPECT_TRUE(isKTruss(g1, 4));
+    
+    Graph g2(6); // Truss, but not Clique
+    g2.addEdge(0, 1);
+    g2.addEdge(0, 4);
+    g2.addEdge(0, 2);
+    g2.addEdge(0, 3);
+    g2.addEdge(1, 2);
+    g2.addEdge(1, 3);
+    g2.addEdge(1, 5);
+    g2.addEdge(2, 4);
+    g2.addEdge(2, 5);
+    g2.addEdge(3, 4);
+    g2.addEdge(3, 5);
+    g2.addEdge(4, 5);
+    g2.sortEdges();
+    EXPECT_TRUE(isKTruss(g2, 4));
+    
+    Graph g3(9); // Truss with vertex connectivity 1
+    g3.addEdge(0, 1);
+    g3.addEdge(0, 2);
+    g3.addEdge(0, 3);
+    g3.addEdge(0, 4);
+    g3.addEdge(1, 2);
+    g3.addEdge(1, 3);
+    g3.addEdge(1, 4);
+    g3.addEdge(2, 3);
+    g3.addEdge(2, 4);
+    g3.addEdge(3, 4);
+    g3.addEdge(5, 6);
+    g3.addEdge(5, 7);
+    g3.addEdge(5, 8);
+    g3.addEdge(5, 4);
+    g3.addEdge(6, 7);
+    g3.addEdge(6, 8);
+    g3.addEdge(6, 4);
+    g3.addEdge(7, 8);
+    g3.addEdge(7, 4);
+    g3.addEdge(8, 4);
+    g3.sortEdges();
+    EXPECT_TRUE(isKTruss(g3, 5));
+    
+    Graph g4(6); // Not k-truss
+    g4.addEdge(0, 1);
+    g4.addEdge(0, 4);
+    g4.addEdge(0, 2);
+    g4.addEdge(0, 3);
+    g4.addEdge(1, 3);
+    g4.addEdge(1, 5);
+    g4.addEdge(2, 4);
+    g4.addEdge(2, 5);
+    g4.addEdge(3, 4);
+    g4.addEdge(4, 5);
+    g4.sortEdges();
+    EXPECT_FALSE(isKTruss(g4, 4));
+  }
   
 TEST_F(CommunityGTest, testLabelPropagationOnUniformGraph) {
 	ErdosRenyiGenerator graphGen(100, 0.2);
