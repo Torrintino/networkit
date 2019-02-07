@@ -21,8 +21,8 @@ namespace NetworKit {
 		}
 		c++;
 	}
-	c+=neighbors_u.size()-i;
-	c+=neighbors_v.size()-j;
+	//c+=neighbors_u.size()-i;
+	//c+=neighbors_v.size()-j;
     return c;
   }
 
