@@ -4,8 +4,8 @@ namespace NetworKit {
   
   count compute_support(const Graph& g, node u, node v) {
 	count c=0;
-    auto neighbors_u=g.neighbors(u);
-    auto neighbors_v=g.neighbors(v);
+    	auto neighbors_u=g.neighbors(u);
+    	auto neighbors_v=g.neighbors(v);
 	count i=0;
 	count j=0;
 	while(i<neighbors_u.size() && j<neighbors_v.size()){
@@ -18,8 +18,8 @@ namespace NetworKit {
 		} else {
 			i++;
 			j++;
+			c++;
 		}
-		c++;
 	}
 	//c+=neighbors_u.size()-i;
 	//c+=neighbors_v.size()-j;
