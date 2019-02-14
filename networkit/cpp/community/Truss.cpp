@@ -32,8 +32,19 @@ namespace NetworKit {
     this->g.push_back(g);
   }
 
+  void MaximumKTruss::run() {
+    count k = 2;
+    Graph copy(g[0]);
+    ReduceToKTruss(copy, 2);
+    while(!copy.isEmpty()) {
+      g[0] = copy;
+      ReduceToKTruss(copy, ++k);
+    }
+    
+  }
+
   /*** More notes and specifications can be found in the header ***/
-  Graph& ReduceToKTruss(Graph& g, count k) {
+  void ReduceToKTruss(Graph& g, count k) {
     SupportQueue sq(g.size().second);
         
     g.forEdges([&] (node u, node v) {
@@ -45,9 +56,12 @@ namespace NetworKit {
     sq.init_hash_table();
     sq.init_support_index();
 
-    while(sq.top().support <= k - 2) {
+    while(sq.top().support < k - 2) {
       SupportEdge e = sq.top();
       sq.pop();
+      g.removeEdge(e.u, e.v);
+      if(sq.head > sq.q.size())
+	break;
       g.forNeighborsOf(e.u, [&] (node w) {
 	  if(sq.isEdge(e.v, w)) {
 	    sq.reduce(e.v, w);
@@ -56,26 +70,22 @@ namespace NetworKit {
 	});
     }
 
-    for(int i=0; i<sq.head; i++)
-      g.removeEdge(sq.q[i].u, sq.q[i].v);
+    g.forNodes([&] (node u) {
+	if(g.degree(u) == 0)
+	  g.removeNode(u);
+      });
 
-    return g;
-  }
-
-  void MaximumKTruss::run() {
-    MaximumKTruss(g[0]);
-    // print g
   }
 
   SupportQueue::SupportQueue(count size) {
     q.reserve(size);
     support_index.reserve(size);
-    support_index[0] = 0;
     head = 0;
   }
 
   void SupportQueue::init_support_index() {
-    count current_support = 0;
+    count current_support = q[0].support;
+    support_index[current_support] = 0;
     for(count i=0; i<q.size(); i++) {
       if(current_support < q[i].support)
 	support_index[++current_support] = i;
@@ -118,17 +128,26 @@ namespace NetworKit {
     }
   }
 
+  void SupportQueue::pop() {
+    support_index[top().support]++;
+    head++;
+  }
+
   bool SupportQueue::isEdge(node u, node v) {
     auto pos = h.find(unpair(u, v));
     return pos != h.end() && (*pos).second >= head;
   }
 
   bool isKTruss(const Graph& g, int k) {
+    bool out=true;
     g.forEdges([&] (node u, node v) {
-	if(compute_support(g, u, v) < k)
-	  return false;
+	auto s = compute_support(g, u, v);
+	if(s < k - 2) {
+	  out=false;
+	  return;
+	}
       });
-    return true;
+    return out;
   }
 
 }

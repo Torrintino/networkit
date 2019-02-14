@@ -13,7 +13,14 @@
  * When there are n nodes and m edges, "node" is used for holding n items and count for m items
  */
 
+
+
 namespace NetworKit {
+
+  // Find all k-trusses in g
+  // The input graph will be overwritten and functions as the result
+  // All edges and nodes, which are not part of a k-truss will be deleted
+  void ReduceToKTruss(Graph& g, count k);
 
   count compute_support(const Graph& g, node u, node v);
 
@@ -46,11 +53,6 @@ namespace NetworKit {
     // Initialize algorithm
     // g may be overwritten
     MaximumKTruss(Graph& g);
-
-    // Find all k-trusses in g
-    // The input graph will be overwritten and functions as the result
-    // All edges and nodes, which are not part of a k-truss will be deleted
-    Graph& ReduceToKTruss(Graph& g, int k);
 
     // Call ReduceToKTruss iteratively, increasing k, until no edges are left
     // For each k, all edges which are part of a k-truss will be printed to stdout
@@ -98,7 +100,7 @@ namespace NetworKit {
     void sort() { std::sort(q.begin(), q.end(), compareSupport);}
 
     // Remove the front element from the Queue
-    void pop() { head++; }
+    void pop();
 
     bool isEdge(node u, node v);
 

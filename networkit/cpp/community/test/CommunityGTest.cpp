@@ -66,7 +66,12 @@ class CommunityGTest: public testing::Test{};
     EXPECT_EQ(compute_support(g1, 0, 1), 0);
     EXPECT_EQ(compute_support(g1, 1, 2), 2);
     EXPECT_EQ(compute_support(g1, 1, 3), 3);
-    
+    EXPECT_EQ(compute_support(g1, 2, 3), 2);
+    EXPECT_EQ(compute_support(g1, 1, 4), 2);
+    EXPECT_EQ(compute_support(g1, 3, 4), 2);
+    EXPECT_EQ(compute_support(g1, 3, 5), 1);
+    EXPECT_EQ(compute_support(g1, 1, 5), 1);
+    EXPECT_EQ(compute_support(g1, 2, 4), 2);
   }
 
   TEST_F(CommunityGTest, testTrussCompareSupport) {
@@ -211,8 +216,8 @@ class CommunityGTest: public testing::Test{};
 
     MaximumKTruss kt(g1);
     kt.run();
-    EXPECT_TRUE(isKTruss(kt.g[0], 4));
     EXPECT_FALSE(isKTruss(kt.g[0], 5));
+    EXPECT_TRUE(isKTruss(kt.g[0], 4));
   }
   
 TEST_F(CommunityGTest, testLabelPropagationOnUniformGraph) {
