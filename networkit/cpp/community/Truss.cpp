@@ -115,7 +115,7 @@ namespace NetworKit {
     // The index to the elements with the old support moves one position to the right
     count i = support_index[q[pos].support]++;
     if(pos != i) {
-      // There is another element with the same support
+      // There is another element with the same support in front of q[pos]
       // As we reduce the support only by one, the new correct position for q[pos]
       //  is the index i, where elements with that support begin, so we can exchange
       //  q[pos] with q[i]
