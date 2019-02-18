@@ -92,10 +92,10 @@ namespace NetworKit {
 
   void SupportQueue::init_support_index() {
     count current_support = q[0].support;
-    support_index[current_support] = 0;
-    for(count i=0; i<q.size(); i++) {
-      if(current_support < q[i].support)
-	support_index[++current_support] = i;
+    support_index[q[0].support] = 0;
+    for(count i=1; i<q.size(); i++) {
+      if(q[i-1].support < q[i].support)
+	support_index[q[i].support] = i;
     }
   }
 
