@@ -25,13 +25,7 @@ namespace NetworKit {
   count compute_support(const Graph& g, node u, node v);
 
   // For a pair of integers, compute a single integer that uniquely identifies that pair
-  int unpair(int u, int v) {
-    if(u >= v) {
-      return ((u + v) * (u + v + 1)/2) + v;
-    } else {
-      return ((u + v) * (u + v + 1)/2) + u;
-    }
-  }
+  int unpair(int u, int v);
 
   // This is just a convenience class, working with triples is pretty ugly oftentimes
   class SupportEdge {
@@ -40,8 +34,7 @@ namespace NetworKit {
     double u, v;
     int support;
 
-  SupportEdge(double u, double v, int support) : u(u), v(v), support(support) {};
-  //SupportEdge(SupportEdge& copy) : u(copy.u), v(copy.v), support(copy.support) {};
+    SupportEdge(double u, double v, int support) : u(u), v(v), support(support) {};
   };
 
   bool compareSupport(SupportEdge e, SupportEdge f) { return (e.support < f.support); }
@@ -61,6 +54,9 @@ namespace NetworKit {
     // In the simple variant, this will be of size 1 and hold the input graph
     // Later it will hold disjunct components of the graph
     std::vector<Graph> g;
+
+    // The largest k, for which the Graph is a k-Truss
+    count k;
   };
 
   // This will be used for testing

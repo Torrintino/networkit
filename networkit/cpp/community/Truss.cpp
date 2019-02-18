@@ -1,6 +1,14 @@
 #include "Truss.h"
 
 namespace NetworKit {
+
+  int unpair(int u, int v) {
+    if(u >= v) {
+      return ((u + v) * (u + v + 1)/2) + v;
+    } else {
+      return ((u + v) * (u + v + 1)/2) + u;
+    }
+  }
   
   count compute_support(const Graph& g, node u, node v) {
 	count c=0;
@@ -30,17 +38,17 @@ namespace NetworKit {
     g.sortEdges();
     hasRun = false;
     this->g.push_back(g);
+    k = 2;
   }
 
   void MaximumKTruss::run() {
-    count k = 2;
     Graph copy(g[0]);
-    ReduceToKTruss(copy, 2);
+    ReduceToKTruss(copy, k);
     while(!copy.isEmpty()) {
       g[0] = copy;
       ReduceToKTruss(copy, ++k);
     }
-    
+    k--;
   }
 
   /*** More notes and specifications can be found in the header ***/

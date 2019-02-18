@@ -219,6 +219,15 @@ class CommunityGTest: public testing::Test{};
     EXPECT_FALSE(isKTruss(kt.g[0], 5));
     EXPECT_TRUE(isKTruss(kt.g[0], 4));
   }
+
+  TEST_F(CommunityGTest, testTrussSystem) {
+    ErdosRenyiGenerator graphGen(100, 0.2);
+    Graph g = graphGen.generate();
+    MaximumKTruss kt(g);
+    kt.run();
+    EXPECT_TRUE(isKTruss(kt.g[0], kt.k));
+    EXPECT_FALSE(isKTruss(kt.g[0], kt.k + 1));
+  }
   
 TEST_F(CommunityGTest, testLabelPropagationOnUniformGraph) {
 	ErdosRenyiGenerator graphGen(100, 0.2);
