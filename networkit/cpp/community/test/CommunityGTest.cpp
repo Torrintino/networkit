@@ -221,7 +221,7 @@ class CommunityGTest: public testing::Test{};
   }
 
   TEST_F(CommunityGTest, testTrussSystem) {
-    ErdosRenyiGenerator graphGen(100, 0.2);
+    ErdosRenyiGenerator graphGen(50, 0.8);
     Graph g = graphGen.generate();
     MaximumKTruss kt(g);
     kt.run();

@@ -38,7 +38,7 @@ namespace NetworKit {
     g.sortEdges();
     hasRun = false;
     this->g.push_back(g);
-    k = 2;
+    k = 3;
   }
 
   void MaximumKTruss::run() {
@@ -64,18 +64,17 @@ namespace NetworKit {
     sq.init_hash_table();
     sq.init_support_index();
 
-    while(sq.top().support < k - 2) {
+    while(sq.head < sq.q.size() && sq.top().support < k - 2) {
       SupportEdge e = sq.top();
       sq.pop();
-      g.removeEdge(e.u, e.v);
-      if(sq.head > sq.q.size())
-	break;
+      
       g.forNeighborsOf(e.u, [&] (node w) {
 	  if(sq.isEdge(e.v, w)) {
 	    sq.reduce(e.v, w);
 	    sq.reduce(e.u, w);
 	  }
 	});
+      g.removeEdge(e.u, e.v);
     }
 
     g.forNodes([&] (node u) {
