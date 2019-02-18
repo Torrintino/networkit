@@ -34,11 +34,20 @@ namespace NetworKit {
     return c;
   }
 
-  MaximumKTruss::MaximumKTruss(Graph& g) {
+  MaximumKTruss::MaximumKTruss(Graph& g) : sq(g.size().second) {
     g.sortEdges();
     hasRun = false;
     this->g.push_back(g);
     k = 3;
+
+    g.forEdges([&] (node u, node v) {
+	// Use triangle counting algorithm, O(m log(m))
+	count support = compute_support(g, u, v); 
+	sq.push(u, v, support);
+      });
+    sq.sort();
+    sq.init_hash_table();
+    sq.init_support_index();
   }
 
   void MaximumKTruss::run() {
@@ -52,18 +61,7 @@ namespace NetworKit {
   }
 
   /*** More notes and specifications can be found in the header ***/
-  void ReduceToKTruss(Graph& g, count k) {
-    SupportQueue sq(g.size().second);
-        
-    g.forEdges([&] (node u, node v) {
-	// Use triangle counting algorithm, O(m log(m))
-	count support = compute_support(g, u, v); 
-	sq.push(u, v, support);
-      });
-    sq.sort();
-    sq.init_hash_table();
-    sq.init_support_index();
-
+  void MaximumKTruss::ReduceToKTruss(Graph& g, count k) {
     while(sq.head < sq.q.size() && sq.top().support < k - 2) {
       SupportEdge e = sq.top();
       sq.pop();

@@ -17,11 +17,6 @@
 
 namespace NetworKit {
 
-  // Find all k-trusses in g
-  // The input graph will be overwritten and functions as the result
-  // All edges and nodes, which are not part of a k-truss will be deleted
-  void ReduceToKTruss(Graph& g, count k);
-
   count compute_support(const Graph& g, node u, node v);
 
   // For a pair of integers, compute a single integer that uniquely identifies that pair
@@ -38,32 +33,7 @@ namespace NetworKit {
   };
 
   bool compareSupport(SupportEdge e, SupportEdge f) { return (e.support < f.support); }
-
-  /* The implementation is according to "Truss Decomposition in Massive Networks" */
-  class MaximumKTruss : public Algorithm {
-
-  public:
-    // Initialize algorithm
-    // g may be overwritten
-    MaximumKTruss(Graph& g);
-
-    // Call ReduceToKTruss iteratively, increasing k, until no edges are left
-    // For each k, all edges which are part of a k-truss will be printed to stdout
-    void run() override;
-
-    // In the simple variant, this will be of size 1 and hold the input graph
-    // Later it will hold disjunct components of the graph
-    std::vector<Graph> g;
-
-    // The largest k, for which the Graph is a k-Truss
-    count k;
-  };
-
-  // This will be used for testing
-  // Returns true, if g is a k-truss
-  bool isKTruss(const Graph& g, int k);
-
-
+  
   /* This is a Queue, which holds a Triple (u, v, s), where u and v are ID's
      of two nodes, which form an edge and s is the support of that edge.
      After the initialization phase, the elements will be ordered by their
@@ -105,6 +75,38 @@ namespace NetworKit {
     std::vector<count> support_index;
     std::unordered_map<count, count> h;
   };
+
+  /* The implementation is according to "Truss Decomposition in Massive Networks" */
+  class MaximumKTruss : public Algorithm {
+
+  public:
+    // Initialize algorithm
+    // g may be overwritten
+    MaximumKTruss(Graph& g);
+
+    // Call ReduceToKTruss iteratively, increasing k, until no edges are left
+    // For each k, all edges which are part of a k-truss will be printed to stdout
+    void run() override;
+
+    
+    // Find all k-trusses in g
+    // The input graph will be overwritten and functions as the result
+    // All edges and nodes, which are not part of a k-truss will be deleted
+    void ReduceToKTruss(Graph& g, count k);
+
+    // In the simple variant, this will be of size 1 and hold the input graph
+    // Later it will hold disjunct components of the graph
+    std::vector<Graph> g;
+
+    // The largest k, for which the Graph is a k-Truss
+    count k;
+
+    SupportQueue sq;
+  };
+
+  // This will be used for testing
+  // Returns true, if g is a k-truss
+  bool isKTruss(const Graph& g, int k);
 
 }
 
