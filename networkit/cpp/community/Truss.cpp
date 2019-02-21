@@ -29,38 +29,35 @@ namespace NetworKit {
 			c++;
 		}
 	}
-	//c+=neighbors_u.size()-i;
-	//c+=neighbors_v.size()-j;
+
     return c;
   }
 
-  MaximumKTruss::MaximumKTruss(Graph& g) : sq(g.size().second) {
+  MaximumKTruss::MaximumKTruss(Graph& g) : sq(g.size().second), g(g) {
     g.sortEdges();
     hasRun = false;
-    this->g.push_back(g);
     k = 3;
 
     g.forEdges([&] (node u, node v) {
-	// Use triangle counting algorithm, O(m log(m))
 	count support = compute_support(g, u, v); 
 	sq.push(u, v, support);
       });
+    
     sq.sort();
     sq.init_hash_table();
     sq.init_support_index();
   }
 
   void MaximumKTruss::run() {
-    Graph copy(g[0]);
+    Graph copy(g);
     ReduceToKTruss(copy, k);
     while(!copy.isEmpty()) {
-      g[0] = copy;
+      g = copy;
       ReduceToKTruss(copy, ++k);
     }
     k--;
   }
 
-  /*** More notes and specifications can be found in the header ***/
   void MaximumKTruss::ReduceToKTruss(Graph& g, count k) {
     while(sq.head < sq.q.size() && sq.top().support < k - 2) {
       SupportEdge e = sq.top();
@@ -121,7 +118,7 @@ namespace NetworKit {
       q[pos] = q[i];
       q[i] = temp;
       h[unpair(u, v)] = i;
-      h[unpair(q[pos].u, q[pos].v)] = pos;
+       h[unpair(q[pos].u, q[pos].v)] = pos;
 
       pos = i;
     }

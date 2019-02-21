@@ -216,8 +216,8 @@ class CommunityGTest: public testing::Test{};
 
     MaximumKTruss kt(g1);
     kt.run();
-    EXPECT_FALSE(isKTruss(kt.g[0], 5));
-    EXPECT_TRUE(isKTruss(kt.g[0], 4));
+    EXPECT_FALSE(isKTruss(kt.g, 5));
+    EXPECT_TRUE(isKTruss(kt.g, 4));
   }
 
   TEST_F(CommunityGTest, testTrussSystem) {
@@ -227,8 +227,8 @@ class CommunityGTest: public testing::Test{};
     Graph g = graphGen.generate();
     MaximumKTruss kt(g);
     kt.run();
-    EXPECT_TRUE(isKTruss(kt.g[0], kt.k));
-    EXPECT_FALSE(isKTruss(kt.g[0], kt.k + 1));
+    EXPECT_TRUE(isKTruss(kt.g, kt.k));
+    EXPECT_FALSE(isKTruss(kt.g, kt.k + 1));
   }
   
 TEST_F(CommunityGTest, testLabelPropagationOnUniformGraph) {
